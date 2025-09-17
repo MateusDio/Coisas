@@ -31,6 +31,13 @@ delete from tb_usuarioss where id_usuario = 1;
 # Informações:
 
 user:root
+
 password:root
+
 url: jdbc:mysql://localhost:3306/aulabanco
+
+Driver de uso: com.mysql.jdbc.Driver
+
 tipo de banco: SGDB
+
+
