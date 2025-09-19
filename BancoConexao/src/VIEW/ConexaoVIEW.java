@@ -82,6 +82,11 @@ public class ConexaoVIEW extends javax.swing.JFrame {
 
         labelImagem.setForeground(new java.awt.Color(204, 204, 204));
         labelImagem.setIcon(new javax.swing.ImageIcon("C:\\Users\\aluno.saolucas\\Downloads\\preto.png")); // NOI18N
+        labelImagem.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                labelImagemMousePressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -149,6 +154,10 @@ public class ConexaoVIEW extends javax.swing.JFrame {
     private void txtUsuárioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuárioActionPerformed
 
     }//GEN-LAST:event_txtUsuárioActionPerformed
+
+    private void labelImagemMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelImagemMousePressed
+        System.out.println("Ola!");
+    }//GEN-LAST:event_labelImagemMousePressed
 
     /**
      * @param args the command line arguments
