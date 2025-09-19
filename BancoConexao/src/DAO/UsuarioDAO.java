@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -93,29 +94,49 @@ public class UsuarioDAO {
     
     
     
-    public void pesquisar (UsuarioDTO objUsuarioDTO){
-        String sql = "select * from tb_usuarios where id_usuario = ?";
+  public void pesquisar(UsuarioDTO objUsuarioDTO) {
+    String sql = "SELECT * FROM tb_usuarios WHERE id_usuario = ?";
+    Connection conexao = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    try {
+        // Conecta ao banco
         conexao = ConexaoDAO.conector();
-        
-        try{
-            pst = conexao.prepareStatement(sql);
-            pst.setInt (1, objUsuarioDTO.getId_usuario());
-            rs = pst.executeQuery();
-            if(rs.next()){
-                CadastroUsuario.txtNomeUsu.setText(rs.getString(2));
-                CadastroUsuario.txtLoginUsu.setText(rs.getString(3));
-               CadastroUsuario.txtSenhaUsu.setText(rs.getString(4));
-                CadastroUsuario.cboPerfilUsu.setSelectedItem(rs.getString(5));
-                conexao.close();
-            }else {
-                JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");
-                limparCampos();
-                
-            }
-        } catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Método Pesquisar" + e);
+        pst = conexao.prepareStatement(sql);
+        pst.setInt(1, objUsuarioDTO.getId_usuario());
+        rs = pst.executeQuery();
+
+        // Pega o modelo da tabela
+        DefaultTableModel modelo = (DefaultTableModel) CadastroUsuario.TbUsuarios.getModel();
+        modelo.setRowCount(0); // Limpa a tabela antes de adicionar dados
+
+        // Preenche a tabela
+        if (rs.next()) {
+            modelo.addRow(new Object[]{
+                rs.getInt("id_usuario"),
+                rs.getString("nome_usuario"),
+                rs.getString("login_usuario"),
+                rs.getString("senha_usuario"),
+                rs.getString("perfil_usuario")
+            });
+        } else {
+            JOptionPane.showMessageDialog(null, "Usuário não cadastrado!");
+        }
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, "Erro no método pesquisar: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (pst != null) pst.close();
+            if (conexao != null) conexao.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
+}
     public void PesquisaAuto(){
         String sql = "select * from tb_usuarioss";
         conexao = ConexaoDAO.conector();
@@ -160,12 +181,11 @@ public class UsuarioDAO {
         }
     }
     
-    public void limparCampos(){
-        CadastroUsuario.txtIdUsu.setText(null);
-        CadastroUsuario.txtLoginUsu.setText(null);
-        CadastroUsuario.txtNomeUsu.setText(null);
-        CadastroUsuario.txtSenhaUsu.setText(null);
-        CadastroUsuario.cboPerfilUsu.setSelected
-    }
+ public void limparCampos() {
+  
+    DefaultTableModel modelo = (DefaultTableModel) CadastroUsuario.TbUsuarios.getModel();
+   
+    modelo.setRowCount(0);
+}
     
 }
